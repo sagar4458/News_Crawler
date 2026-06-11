@@ -310,13 +310,12 @@ This project demonstrates the core competencies of a **Foundation Model Data Cur
 | **Full-stack delivery** | Clean UI accessible to non-engineers |
 | **Dataset versioning & export** | Parquet output - standard for large-scale ML |
 
-All backed by a real, honest timeline - no fake credentials, just consistent learning and building.
 
 ---
 
 ## License
 
 © 2026 Mouli Sagar - All rights reserved.
-All rights reserved. For commercial use or collaboration, please contact the author.
+For commercial use or collaboration, please contact the author.
 
 *Started: September 2025 - Completed: June 2026*
