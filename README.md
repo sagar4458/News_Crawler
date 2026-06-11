@@ -1,4 +1,4 @@
-# Regional News Crawler & RAG
+# Regional News Crawler
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![LangChain](https://img.shields.io/badge/LangChain-0.1.0-green)
