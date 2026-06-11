@@ -317,6 +317,6 @@ All backed by a real, honest timeline - no fake credentials, just consistent lea
 ## License
 
 © 2026 Mouli Sagar - All rights reserved.
-This project is for portfolio and educational purposes. For commercial use or collaboration, please contact the author.
+All rights reserved. For commercial use or collaboration, please contact the author.
 
 *Started: September 2025 - Completed: June 2026*
