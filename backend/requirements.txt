@@ -1,0 +1,17 @@
+scrapy
+scrapy-selenium
+selenium
+beautifulsoup4
+pandas
+pyarrow
+datasketch
+faiss-cpu
+langchain
+langchain-community
+sentence-transformers
+flask
+flask-cors
+celery
+redis
+python-dotenv
+numpy

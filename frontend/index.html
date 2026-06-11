@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Data Curation Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f3f6fc;
+            color: #1e293b;
+            transition: background 0.2s, color 0.2s;
+        }
+        body.dark {
+            background: #0a0f1a;
+            color: #e2e8f0;
+        }
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding: 2rem 1.2rem;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        body.dark .sidebar {
+            background: #111827;
+            border-right-color: #1f2a3e;
+        }
+        .logo h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.25rem;
+        }
+        body.dark .logo h2 {
+            background: linear-gradient(135deg, #00e5ff, #2a5298);
+            -webkit-background-clip: text;
+        }
+        .logo p {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin-bottom: 2rem;
+        }
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        .action-btn {
+            background: none;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .action-btn i {
+            width: 24px;
+            font-size: 1.2rem;
+            color: #2a5298;
+        }
+        body.dark .action-btn {
+            border-color: #2d3a5e;
+            color: #e2e8f0;
+        }
+        body.dark .action-btn i {
+            color: #00e5ff;
+        }
+        .action-btn:hover {
+            background: #f1f5f9;
+            border-color: #2a5298;
+            transform: translateX(4px);
+        }
+        body.dark .action-btn:hover {
+            background: #1e2a3a;
+            border-color: #00e5ff;
+        }
+        .stats-panel {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        body.dark .stats-panel {
+            border-top-color: #1f2a3e;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        .stat-value {
+            font-weight: 700;
+        }
+        .refresh-stats {
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+            color: #2a5298;
+        }
+        body.dark .refresh-stats {
+            color: #00e5ff;
+        }
+        .main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .internet-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.05);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+        }
+        body.dark .internet-status {
+            background: rgba(255,255,255,0.1);
+        }
+        .online { color: #10b981; }
+        .offline { color: #ef4444; }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        input:checked + .slider {
+            background-color: #00e5ff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        .qa-card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        body.dark .qa-card {
+            background: #111827;
+        }
+        .input-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 2rem;
+            font-family: inherit;
+            background: white;
+        }
+        body.dark .input-group input {
+            background: #1e2a3a;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+        button {
+            border: none;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        body.dark .btn-primary {
+            background: #00e5ff;
+            color: #0a0f1a;
+        }
+        .answer-box {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        body.dark .answer-box {
+            background: #0f1420;
+        }
+        .status-card {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        body.dark .status-card {
+            background: #111827;
+        }
+        .status-content {
+            background: #f1f5f9;
+            padding: 0.8rem;
+            border-radius: 0.6rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            margin-top: 0.5rem;
+        }
+        body.dark .status-content {
+            background: #0f1420;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.2rem;
+        }
+        body.dark footer {
+            border-top-color: #1f2a3e;
+        }
+        @media (max-width: 768px) {
+            .dashboard { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; }
+            .main { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-newspaper"></i> NewsCure</h2>
+            <p>Data Curation Pipeline</p>
+        </div>
+        <div class="action-list">
+            <div class="action-btn" id="crawlBtn"><i class="fas fa-spider"></i> Start Crawl</div>
+            <div class="action-btn" id="dedupBtn"><i class="fas fa-filter"></i> Deduplicate</div>
+            <div class="action-btn" id="indexBtn"><i class="fas fa-database"></i> Build Index</div>
+            <div class="action-btn" id="downloadBtn"><i class="fas fa-download"></i> Download Dataset</div>
+        </div>
+        <div class="stats-panel">
+            <h4><i class="fas fa-chart-simple"></i> Dataset Stats</h4>
+            <div class="stat-item"><span>Raw articles:</span><span id="rawCount" class="stat-value">-</span></div>
+            <div class="stat-item"><span>Deduped articles:</span><span id="dedupedCount" class="stat-value">-</span></div>
+            <div class="stat-item"><span>Index chunks:</span><span id="chunkCount" class="stat-value">-</span></div>
+            <div class="refresh-stats" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh stats</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main">
+        <div class="top-bar">
+            <div class="internet-status" id="internetStatus">
+                <i class="fas fa-wifi"></i> <span id="statusText">Checking...</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="qa-card">
+            <h3><i class="fas fa-robot"></i> Ask your dataset</h3>
+            <div class="input-group">
+                <input type="text" id="questionInput" placeholder="e.g., What areas are expected to be affected by thundersqualls?">
+                <button id="askBtn" class="btn-primary"><i class="fas fa-comment-dots"></i> Ask</button>
+                <button id="surpriseBtn" class="btn-secondary"><i class="fas fa-magic"></i> Surprise Me</button>
+            </div>
+            <div id="answerArea" class="answer-box" style="display: none;">
+                <div><strong>Answer</strong></div>
+                <div id="answerText" style="margin: 0.5rem 0;"></div>
+                <div id="answerSources" class="sources"></div>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <div><i class="fas fa-terminal"></i> Pipeline Status</div>
+            <div id="statusContent" class="status-content">Ready. Click any action to start.</div>
+        </div>
+
+        <footer>
+            <i class="fas fa-crown"></i> <strong>NewsCure</strong> - Intelligent News Curation Platform<br>
+            <i class="fas fa-balance-scale"></i> © 2026 Mouli Sagar. All rights reserved. | 
+            <i class="fas fa-chart-line"></i> Dedup · FAISS · Groq LLM · Hybrid RAG
+        </footer>
+    </div>
+</div>
+
+<script>
+    // Dark mode (persistent)
+    const toggle = document.getElementById('darkModeToggle');
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark');
+        toggle.checked = true;
+    }
+    toggle.addEventListener('change', () => {
+        if (toggle.checked) {
+            document.body.classList.add('dark');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
+
+    // Internet status
+    function updateInternetStatus() {
+        const statusSpan = document.getElementById('statusText');
+        const icon = document.querySelector('#internetStatus i');
+        if (navigator.onLine) {
+            statusSpan.innerText = 'Online';
+            icon.className = 'fas fa-wifi online';
+        } else {
+            statusSpan.innerText = 'Offline';
+            icon.className = 'fas fa-wifi offline';
+        }
+    }
+    window.addEventListener('online', updateInternetStatus);
+    window.addEventListener('offline', updateInternetStatus);
+    updateInternetStatus();
+
+    // Helper functions
+    const statusDiv = document.getElementById('statusContent');
+    const answerArea = document.getElementById('answerArea');
+    const answerText = document.getElementById('answerText');
+    const answerSources = document.getElementById('answerSources');
+
+    async function callEndpoint(url, options = {}) {
+        const res = await fetch(`http://localhost:5000${url}`, {
+            method: options.method || 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: options.body ? JSON.stringify(options.body) : undefined
+        });
+        return await res.json();
+    }
+
+    function setStatus(msg, isError = false) {
+        statusDiv.innerHTML = msg;
+        statusDiv.style.color = isError ? '#ef4444' : '';
+    }
+
+    async function loadStats() {
+        try {
+            const res = await fetch('http://localhost:5000/stats');
+            const data = await res.json();
+            document.getElementById('rawCount').innerText = data.raw_count;
+            document.getElementById('dedupedCount').innerText = data.deduped_count;
+            document.getElementById('chunkCount').innerText = data.index_chunks;
+        } catch (e) { console.warn("Stats unavailable"); }
+    }
+
+    async function startCrawl() {
+        setStatus('<i class="fas fa-spinner fa-pulse"></i> Crawling live news... (30-60s)');
+        try {
+            const data = await callEndpoint('/crawl');
+            if (data.error) throw new Error(data.error);
+            setStatus('✅ Crawl completed. New articles fetched.');
+            loadStats();
+        } catch (e) { setStatus(`❌ Crawl failed: ${e.message}`, true); }
+    }
+    async function deduplicate() {
+        setStatus('<i class="fas fa-spinner fa-pulse"></i> Removing duplicates...');
+        try {
+            const data = await callEndpoint('/deduplicate');
+            if (data.error) throw new Error(data.error);
+            setStatus(`✅ Dedup: ${data.original} → exact ${data.after_exact} → near ${data.after_near}`);
+            loadStats();
+        } catch (e) { setStatus(`❌ Dedup failed: ${e.message}`, true); }
+    }
+    async function buildIndex() {
+        setStatus('<i class="fas fa-spinner fa-pulse"></i> Building FAISS index... (first time downloads model)');
+        try {
+            const data = await callEndpoint('/build_index');
+            if (data.error) throw new Error(data.error);
+            setStatus(`✅ Index built: ${data.message}`);
+            loadStats();
+        } catch (e) { setStatus(`❌ Index build failed: ${e.message}`, true); }
+    }
+    async function downloadDataset() {
+        setStatus('<i class="fas fa-spinner fa-pulse"></i> Preparing download...');
+        try {
+            const res = await fetch('http://localhost:5000/export_dataset');
+            if (!res.ok) { const err = await res.json(); throw new Error(err.error); }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'news_dataset.parquet';
+            a.click();
+            URL.revokeObjectURL(url);
+            setStatus('✅ Download complete: news_dataset.parquet');
+        } catch (e) { setStatus(`❌ Download error: ${e.message}`, true); }
+    }
+    async function askQuestion() {
+        const question = document.getElementById('questionInput').value.trim();
+        if (!question) { setStatus('Please enter a question.', true); return; }
+        answerArea.style.display = 'block';
+        answerText.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Generating answer...';
+        answerSources.innerHTML = '';
+        try {
+            const data = await callEndpoint('/query', { method: 'POST', body: { question } });
+            if (data.error) throw new Error(data.error);
+            answerText.innerHTML = data.answer.replace(/\n/g, '<br>');
+            answerSources.innerHTML = `<strong>Sources:</strong> ${data.sources.join(', ')}`;
+        } catch (e) {
+            answerText.innerHTML = `Error: ${e.message}`;
+        }
+    }
+    async function surpriseMe() {
+        setStatus('<i class="fas fa-spinner fa-pulse"></i> Generating random question...');
+        try {
+            const res = await fetch('http://localhost:5000/surprise');
+            if (!res.ok) { const err = await res.json(); throw new Error(err.error); }
+            const data = await res.json();
+            document.getElementById('questionInput').value = data.question;
+            setStatus(`✨ Surprise! Try asking: "${data.question.substring(0, 80)}..."`);
+        } catch (e) {
+            setStatus(`❌ Surprise failed: ${e.message}. Rebuild index?`, true);
+        }
+    }
+
+    // Event listeners
+    document.getElementById('crawlBtn').addEventListener('click', startCrawl);
+    document.getElementById('dedupBtn').addEventListener('click', deduplicate);
+    document.getElementById('indexBtn').addEventListener('click', buildIndex);
+    document.getElementById('downloadBtn').addEventListener('click', downloadDataset);
+    document.getElementById('askBtn').addEventListener('click', askQuestion);
+    document.getElementById('surpriseBtn').addEventListener('click', surpriseMe);
+    document.getElementById('refreshStats').addEventListener('click', loadStats);
+    document.getElementById('questionInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') askQuestion(); });
+
+    loadStats();
+</script>
+</body>
+</html>
