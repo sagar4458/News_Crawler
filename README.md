@@ -281,20 +281,26 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## Limitations & Future Work
 
-**Current limitations:**
+### Current Limitations
+- **Crawler scope** - Currently covers three English-language Indian news sites. Extensible to regional languages (Hindi, Tamil, etc.) with language-specific NLP pipelines.
+- **Deduplication threshold** - Jaccard similarity ≥ 0.8 works well but may occasionally flag legitimate variations. Threshold is tunable based on precision/recall tradeoffs.
+- **LLM cost** - Groq free tier is generous, but heavy use requires a paid plan or local fallback (e.g., Ollama).
+- **No user management** - Single-user architecture; no API keys, rate limiting or multi-user isolation on the frontend.
+- **Synchronous crawling** - Crawl button blocks until completion; could be made async with Celery for non-blocking UI.
 
-- **Crawler scope** - Currently three English-language Indian news sites. Can be extended to regional languages (Hindi, Tamil, etc.).
-- **Deduplication threshold** - Jaccard similarity ≥ 0.8 works well but may occasionally flag legitimate variations. The threshold can be tuned.
-- **LLM cost** - Groq free tier is generous, but heavy use would require a paid plan or a local model (e.g., Ollama).
-- **No user management** - Single-user; no API keys or rate limiting for the frontend.
-- **Synchronous crawl** - The crawl button blocks until completion. Could be made async with Celery.
+### Planned Enhancements
 
-**Planned improvements:**
+- **AWS Cloud Integration** - Integrate Groq API with AWS infrastructure to combine Groq's ultra-fast LPU (Language Processing Unit) inference speed with AWS's robust, secure cloud architecture, enabling serverless deployment via Lambda, dataset scaling via S3, and auto-scaling for high-traffic scenarios.
 
-- Data preview table (first 10 deduped articles)
-- Export as JSON and CSV (in addition to Parquet)
-- Scheduled crawling (e.g., every 6 hours)
-- Local LLM fallback via Ollama for offline use
+- **Regional Language Support** - Extend crawler to cover Hindi, Tamil and other regional Indian news sources with language-specific text preprocessing and embedding models.
+
+- **Scheduled Crawling** - Implement async crawling with Celery to fetch fresh articles on a schedule (e.g., every 6 hours) without blocking the API.
+
+- **Data Preview Interface** - Add paginated table view of deduplicated articles in the dashboard for quick data inspection.
+
+- **Export Formats** - Support JSON and CSV exports in addition to Parquet for compatibility with different downstream tools.
+
+- **Local LLM Fallback** - Integrate Ollama for offline use when Groq API is unavailable or rate-limited.
 
 ---
 
